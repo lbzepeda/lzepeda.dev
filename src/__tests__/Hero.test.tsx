@@ -5,6 +5,7 @@ import { titles } from '@/app/components/hero-section/Titles';
 
 // Mock of ThemeContext
 let mockTheme = 'light';
+const titleContainerId = 'title-container';
 jest.mock('@/app/context/ThemeContext', () => ({
   useTheme: () => ({
     theme: mockTheme,
@@ -36,13 +37,13 @@ describe('Hero Component', () => {
     render(<Hero />);
 
     // Advance time for each character with TYPE_SPEED
-    for (let i = 0; i < titles[0].textParts[0].text.length; i++) {
+    for (const _ of titles[0].textParts[0].text) {
       act(() => {
         jest.advanceTimersByTime(TYPE_SPEED);
       });
     }
 
-    const titleContainer = screen.getByTestId('title-container');
+    const titleContainer = screen.getByTestId(titleContainerId);
     const spans = titleContainer.querySelectorAll('span');
     expect(spans[0].textContent).toBe('lzepeda');
   });
@@ -95,7 +96,7 @@ describe('Hero Component', () => {
       jest.advanceTimersByTime(TYPE_SPEED);
     });
 
-    const titleContainer = screen.getByTestId('title-container');
+    const titleContainer = screen.getByTestId(titleContainerId);
     const spans = titleContainer.querySelectorAll('span');
     expect(spans[0].textContent).toBe('Levi Zepeda');
   });
@@ -118,7 +119,7 @@ describe('Hero Component', () => {
 
   it('maintains responsive layout classes', () => {
     render(<Hero />);
-    const titleContainer = screen.getByTestId('title-container');
+    const titleContainer = screen.getByTestId(titleContainerId);
     expect(titleContainer).toHaveClass('text-4xl', 'md:text-6xl');
 
     const mainContainer = screen.getByTestId('hero-section');
