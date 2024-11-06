@@ -4,6 +4,7 @@ import Navbar from '@/app/components/nav-bar/Navbar';
 
 //Mock the ThemeContext with variables to control the theme
 let mockTheme = 'light';
+const traslateFullClass = 'translate-y-full';
 const mockToggleTheme = jest.fn();
 
 // Mock of the ThemeContext
@@ -50,7 +51,7 @@ describe('Navbar Component', () => {
     const hamburgerButton = screen.getByLabelText('Toggle menu');
 
     // Check initial state
-    expect(mobileMenu).toHaveClass('translate-y-full');
+    expect(mobileMenu).toHaveClass(traslateFullClass);
 
     // Open the menu
     fireEvent.click(hamburgerButton);
@@ -58,7 +59,7 @@ describe('Navbar Component', () => {
 
     // Close the menu
     fireEvent.click(hamburgerButton);
-    expect(mobileMenu).toHaveClass('translate-y-full');
+    expect(mobileMenu).toHaveClass(traslateFullClass);
   });
 
   it('closes mobile menu when a navigation item is clicked', () => {
@@ -75,7 +76,7 @@ describe('Navbar Component', () => {
     fireEvent.click(homeLinks[1]);
 
     // Check that the menu is closed
-    expect(mobileMenu).toHaveClass('translate-y-full');
+    expect(mobileMenu).toHaveClass(traslateFullClass);
   });
 
   it('renders correct number of navigation items', () => {
