@@ -67,6 +67,7 @@ function Hero() {
 
   return (
     <section
+      data-testid="hero-section"
       id="home"
       className="min-h-screen w-full flex items-center justify-center bg-white dark:bg-slate-900"
     >
@@ -74,7 +75,10 @@ function Hero() {
         <div className="flex flex-col items-start gap-6">
           {/* Container for title and subtitle */}
           <div className="flex flex-col gap-2">
-            <div className="group font-mono text-4xl md:text-6xl font-bold relative">
+            <div
+              data-testid="title-container"
+              className="group font-mono text-4xl md:text-6xl font-bold relative"
+            >
               {renderTitle()}
               {!isComplete && (
                 <span className="animate-pulse text-slate-900 dark:text-white">

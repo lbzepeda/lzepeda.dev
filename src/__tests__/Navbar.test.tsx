@@ -1,5 +1,6 @@
-import Navbar from '@/app/components/nav-bar/Navbar';
 import { fireEvent, render, screen } from '@testing-library/react';
+
+import Navbar from '@/app/components/nav-bar/Navbar';
 
 //Mock the ThemeContext with variables to control the theme
 let mockTheme = 'light';
