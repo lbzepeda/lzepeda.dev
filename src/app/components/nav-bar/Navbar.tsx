@@ -79,6 +79,7 @@ function Navbar() {
 
         {/* Mobile Navigation Menu */}
         <div
+          data-testid="mobile-menu"
           className={`md:hidden fixed inset-0 top-16 bg-white dark:bg-slate-900 transition-transform duration-300 ease-in-out ${
             isMenuOpen ? 'translate-y-0' : 'translate-y-full'
           }`}
