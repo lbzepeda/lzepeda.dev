@@ -1,11 +1,13 @@
-import Project from '@/app/components/project-section/Project';
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import Project from '@/app/components/project-section/Project';
+
+const companyName = 'Test Company';
 jest.mock('@/app/components/project-section/projectData', () => ({
   projectData: [
     {
       role: 'Test Role',
-      company: 'Test Company',
+      company: companyName,
       period: '2023 - NOW',
       projects: [
         {
@@ -34,7 +36,7 @@ describe('Project Component', () => {
 
   it('displays project tabs correctly', () => {
     render(<Project />);
-    expect(screen.getByText('Test Company')).toBeInTheDocument();
+    expect(screen.getByText(companyName)).toBeInTheDocument();
   });
 
   it('shows project details when tab is selected', () => {
@@ -58,14 +60,14 @@ describe('Project Component', () => {
 
   it('handles tab switching correctly', () => {
     render(<Project />);
-    const tabButton = screen.getByText('Test Company');
+    const tabButton = screen.getByText(companyName);
     fireEvent.click(tabButton);
     expect(screen.getByText('Test details')).toBeInTheDocument();
   });
 
   it('applies correct styling to active tab', () => {
     render(<Project />);
-    const tabButton = screen.getByText('Test Company');
+    const tabButton = screen.getByText(companyName);
     expect(tabButton).toHaveClass('bg-emerald-600', 'text-white');
   });
 });
