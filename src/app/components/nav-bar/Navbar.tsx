@@ -7,6 +7,7 @@ const NAVIGATION_ITEMS = [
   { href: '#home', label: 'Home', number: ' 0.' },
   { href: '#about', label: 'About Me', number: ' 1.' },
   { href: '#career', label: 'Career', number: ' 2.' },
+  { href: '#project', label: 'Projects', number: ' 3.' },
 ] as const;
 
 function Navbar() {
