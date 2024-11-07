@@ -1,6 +1,7 @@
 'use client';
-import { ExternalLink, FileDown, Linkedin, Mail } from 'lucide-react';
 import React from 'react';
+
+import { ExternalLink, FileDown, Linkedin, Mail } from 'lucide-react';
 
 const Contact: React.FC = () => {
   const email = 'levi.zepeda06@gmail.com';

@@ -1,5 +1,6 @@
-import Contact from '@/app/components/contact-section/Contact';
 import { fireEvent, render, screen } from '@testing-library/react';
+
+import Contact from '@/app/components/contact-section/Contact';
 
 describe('Contact Component', () => {
   const email = 'levi.zepeda06@gmail.com';
