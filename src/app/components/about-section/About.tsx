@@ -1,214 +1,164 @@
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import type { ReactElement } from 'react';
+
 import Browser from './Browser';
-import Editor from './Editor';
-import { Terminal } from './Terminal';
+import Terminal from './Terminal';
 
-const About = () => {
-  const [currentComponent, setCurrentComponent] = useState<
-    'editor' | 'terminal' | 'browser'
-  >('editor');
-  const [isInView, setIsInView] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const progressInterval = useRef<NodeJS.Timeout | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+const TRANSITION_DELAY = 300;
 
-  const aboutMeCode = `import { Profile } from '@/components/ui'
+function About() {
+  const [isInView, setIsInView] = useState(true);
+  const [animationCompleted, setAnimationCompleted] = useState(false);
+  const sectionRef = useRef(null);
 
-const AboutMe = () => (
-    <section class="about-container">
-        <h1 class="about-title">About Me</h1>
-        
-        <div class="about-content">
-            <p class="about-text">
-             I'm Levi Zepeda, a Frontend dev {...}
-            </p>
-        </div>
-
-        <Profile />
-    </section>
-)`;
-
-  const progressStyle = useMemo(
-    () => ({
-      width: `${progress}%`,
-    }),
-    [progress]
+  const components = useMemo(
+    () => [
+      {
+        component: <Terminal isVisible={isInView} key="terminal" />,
+        duration: 6000,
+      },
+      {
+        component: <Browser key="browser" />,
+        duration: 0,
+      },
+    ],
+    [isInView]
   );
 
-  useEffect(() => {
-    if (isInView && !isPaused) {
-      const startProgress = () => {
-        if (progressInterval.current) clearInterval(progressInterval.current);
+  const [activeComponent, setActiveComponent] = useState({
+    index: 0,
+    isVisible: true,
+  });
 
-        progressInterval.current = setInterval(() => {
-          setProgress((prev) => {
-            const nextProgress = prev + 0.5;
-
-            // First update the progress before starting the transition
-            if (currentComponent === 'editor' && nextProgress >= 33) {
-              if (!isAnimating) {
-                setIsAnimating(true);
-                setTimeout(() => {
-                  setCurrentComponent('terminal');
-                  setIsAnimating(false);
-                }, 500);
-              }
-              return 33;
-            }
-
-            if (currentComponent === 'terminal' && nextProgress >= 110) {
-              if (!isAnimating) {
-                setIsAnimating(true);
-                setTimeout(() => {
-                  setCurrentComponent('browser');
-                  setIsAnimating(false);
-                }, 500);
-              }
-              return 66;
-            }
-
-            if (nextProgress >= 100) {
-              return 100;
-            }
-
-            return nextProgress;
-          });
-        }, 50);
-      };
-
-      startProgress();
-    }
-
-    // Cleanup interval
-    return () => {
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
-      }
-    };
-  }, [isInView, isPaused, currentComponent, isAnimating]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !isPaused) {
-          setIsInView(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    const section = document.getElementById('about');
-    if (section) {
-      observer.observe(section);
-    }
-
-    return () => {
-      if (section) {
-        observer.unobserve(section);
-      }
-    };
-  }, [isPaused]);
-
-  const handleTerminalComplete = useCallback(() => {
-    if (!isPaused) {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentComponent('browser');
-        setIsAnimating(false);
-      }, 500);
-    }
-  }, [isPaused]);
+  const [currentComponent, setCurrentComponent] = useState<ReactElement>(
+    components[0].component
+  );
 
   const handleReset = useCallback(() => {
-    setIsAnimating(true);
-    if (progressInterval.current) {
-      clearInterval(progressInterval.current);
-    }
+    setAnimationCompleted(false);
+    setActiveComponent((prev) => ({
+      ...prev,
+      isVisible: false,
+    }));
+
     setTimeout(() => {
-      setCurrentComponent('editor');
-      setProgress(0);
-      setIsAnimating(false);
-      setIsInView(true);
-      setIsPaused(false);
-    }, 500);
-  }, []);
+      setCurrentComponent(components[0].component);
+      setActiveComponent({
+        index: 0,
+        isVisible: false,
+      });
 
-  const togglePause = useCallback(() => {
-    setIsPaused((prev) => !prev);
-  }, []);
+      requestAnimationFrame(() => {
+        setActiveComponent({
+          index: 0,
+          isVisible: true,
+        });
+      });
+    }, TRANSITION_DELAY);
+  }, [components]);
 
-  const renderCurrentComponent = () => {
-    switch (currentComponent) {
-      case 'editor':
-        return <Editor code={aboutMeCode} />;
-      case 'terminal':
-        return <Terminal onComplete={handleTerminalComplete} />;
-      case 'browser':
-        return <Browser />;
-      default:
-        return null;
+  useEffect(() => {
+    if (activeComponent.isVisible) {
+      setCurrentComponent(components[activeComponent.index].component);
     }
-  };
+  }, [activeComponent.isVisible, activeComponent.index, components]);
+
+  useEffect(() => {
+    const currentRef = sectionRef.current;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5,
+      }
+    );
+
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const { index } = activeComponent;
+    if (index >= components.length - 1) {
+      setAnimationCompleted(true);
+      return;
+    }
+
+    const currentDuration = components[index].duration;
+
+    const timers = [
+      setTimeout(
+        () => setActiveComponent((prev) => ({ ...prev, isVisible: false })),
+        currentDuration
+      ),
+      setTimeout(() => {
+        setActiveComponent({
+          index: index + 1,
+          isVisible: true,
+        });
+      }, currentDuration + TRANSITION_DELAY),
+    ];
+
+    return () => timers.forEach(clearTimeout);
+  }, [activeComponent, components, isInView]);
 
   return (
     <section
       ref={sectionRef}
+      data-testid="about-section"
       id="about"
-      className="relative min-h-screen w-full flex flex-col items-center justify-center bg-gray-200 dark:bg-indigo-950 p-4 overflow-hidden"
+      className="relative min-h-screen w-full flex items-center justify-center bg-gray-100 dark:bg-indigo-900"
     >
-      {/* Main container with responsive height */}
-      <div className="w-full max-w-4xl h-[700px] md:h-[550px] relative">
-        {/* Current component container with scroll if necessary */}
-        <div
-          className={`w-full h-[calc(100%-4rem)] transition-all duration-500 overflow-auto px-2 md:px-0 ${
-            isAnimating
-              ? 'opacity-0 transform -translate-y-4'
-              : 'opacity-100 transform translate-y-0'
-          }`}
-        >
-          {/* Only wrap content on mobile for centering */}
-          <div className="h-full md:h-auto flex flex-col justify-center md:block">
-            {renderCurrentComponent()}
+      <div className="w-full max-w-[1100px] px-4 sm:px-6 lg:px-8 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="relative w-full h-[700px] md:h-[550px] flex flex-col items-center justify-center">
+          <div className="h-[calc(100%-4rem)] w-full overflow-auto flex items-center justify-center">
+            <div
+              data-testid="component-wrapper"
+              className={`w-full transition-all duration-300 ${
+                activeComponent.isVisible
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-4'
+              }`}
+            >
+              {currentComponent}
+            </div>
           </div>
-        </div>
 
-        {/* Progress Bar and Controls with absolute position */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <div className="flex items-center gap-4 bg-gray-300/20 hover:bg-gray-300/90 dark:bg-gray-700/20 dark:hover:bg-gray-700/90 backdrop-blur-sm p-2 rounded-lg shadow-lg transition-all duration-300">
-            {/* Controls */}
-            <div className="flex gap-2">
-              <button
-                onClick={togglePause}
-                className="text-slate-600/50 hover:text-purple-500 dark:text-slate-300/50 dark:hover:text-purple-400 text-lg transition-colors"
-                aria-label={isPaused ? 'Resume animation' : 'Pause animation'}
-              >
-                {isPaused ? '▶' : '॥'}
-              </button>
-              <button
-                onClick={handleReset}
-                className="text-slate-600/50 hover:text-purple-500 dark:text-slate-300/50 dark:hover:text-purple-400 text-lg transition-colors"
-                aria-label="Reset animation"
-              >
-                ↺
-              </button>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="flex-1 h-1 bg-gray-200/50 dark:bg-gray-600/50 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-slate-600/50 hover:bg-slate-600 dark:bg-slate-400/50 dark:hover:bg-slate-400 transition-all duration-300 ease-linear"
-                style={progressStyle}
-              />
-            </div>
+          <div
+            data-testid="reset-button-wrapper"
+            className={`transition-all duration-300 mt-4 ${
+              animationCompleted
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-4 pointer-events-none'
+            }`}
+          >
+            <button
+              onClick={handleReset}
+              className="text-slate-600 text-3xl hover:text-purple-500 dark:text-slate-300 dark:hover:text-purple-400 transition-colors"
+              aria-label="Reiniciar animación"
+            >
+              ↺
+            </button>
           </div>
         </div>
       </div>
     </section>
   );
-};
+}
 
 export default About;

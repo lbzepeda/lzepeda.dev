@@ -1,13 +1,21 @@
 import Image from 'next/image';
-
 import WindowHeader from './WindowHeader';
 
 const Browser = () => {
   return (
-    <div className="bg-white dark:bg-gray-800 text-gray-800 dark:text-white font-mono p-2 md:p-4 rounded-lg shadow-lg w-full max-w-4xl mx-auto overflow-auto max-h-[85vh] md:max-h-none">
+    <div
+      data-testid="browser-container"
+      className="bg-white dark:bg-gray-800 text-gray-800 dark:text-white font-mono p-2 md:p-4 rounded-lg shadow-lg w-full max-w-4xl mx-auto overflow-auto max-h-[85vh] md:max-h-none"
+    >
       <WindowHeader title="http://localhost:3000" />
-      <div className="bg-gray-100 dark:bg-gray-900 p-2 md:p-4 rounded-lg">
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 p-2 md:p-4">
+      <div
+        data-testid="content-container"
+        className="bg-gray-100 dark:bg-gray-900 p-2 md:p-4 rounded-lg"
+      >
+        <div
+          data-testid="flex-container"
+          className="flex flex-col md:flex-row items-center gap-4 md:gap-8 p-2 md:p-4"
+        >
           <div className="flex-1">
             <h1 className="text-xl md:text-2xl font-bold text-purple-400">
               About Me
@@ -37,7 +45,10 @@ const Browser = () => {
               Beyond coding, I value quality time with loved ones.
             </p>
           </div>
-          <div className="relative w-48 h-48 md:w-72 md:h-72 rounded-full overflow-hidden flex-shrink-0">
+          <div
+            data-testid="image-container"
+            className="relative w-48 h-48 md:w-72 md:h-72 rounded-full overflow-hidden flex-shrink-0"
+          >
             <Image src="/me.jpg" alt="Levi Zepeda" width={500} height={500} />
           </div>
         </div>
