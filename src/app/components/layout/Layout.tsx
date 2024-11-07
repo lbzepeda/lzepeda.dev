@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ThemeProvider } from '@/app/context/ThemeProvider';
 
+import Footer from '../footer/Footer';
 import Navbar from '../nav-bar/Navbar';
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -11,7 +12,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         <Navbar />
       </header>
       <main>{children}</main>
-      <footer></footer>
+      <Footer />
     </ThemeProvider>
   );
 }
