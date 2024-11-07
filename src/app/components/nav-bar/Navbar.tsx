@@ -6,6 +6,7 @@ import { useTheme } from '../../context/ThemeContext';
 const NAVIGATION_ITEMS = [
   { href: '#home', label: 'Home', number: ' 0.' },
   { href: '#about', label: 'About Me', number: ' 1.' },
+  { href: '#career', label: 'Career', number: ' 2.' },
 ] as const;
 
 function Navbar() {
