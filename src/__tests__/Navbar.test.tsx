@@ -27,9 +27,11 @@ describe('Navbar Component', () => {
     const homeLinks = screen.getAllByText('Home');
     const aboutLinks = screen.getAllByText('About Me');
     const careerLinks = screen.getAllByText('Career');
+    const projectsLinks = screen.getAllByText('Projects');
     expect(homeLinks).toHaveLength(2);
     expect(aboutLinks).toHaveLength(2);
     expect(careerLinks).toHaveLength(2);
+    expect(projectsLinks).toHaveLength(2);
   });
 
   it('shows correct theme button text based on theme', () => {
@@ -84,7 +86,7 @@ describe('Navbar Component', () => {
   it('renders correct number of navigation items', () => {
     render(<Navbar />);
     const navigationItems = screen.getAllByRole('link');
-    expect(navigationItems).toHaveLength(6);
+    expect(navigationItems).toHaveLength(8);
   });
 
   it('applies dark theme styles when theme is dark', () => {
