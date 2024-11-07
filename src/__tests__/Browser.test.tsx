@@ -1,12 +1,22 @@
-import Browser from '@/app/components/about-section/Browser';
 import { render, screen } from '@testing-library/react';
 
-// Mock del componente Image de Next.js
+import Browser from '@/app/components/about-section/Browser';
+
+// Definir interfaz para las props de Image
+interface ImageProps extends React.ComponentPropsWithoutRef<'img'> {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+// Mock mejorado para next/image
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props: any) => {
+  default: function MockImage(props: ImageProps) {
+    const { alt, ...rest } = props;
     // eslint-disable-next-line @next/next/no-img-element
-    return <img {...props} />;
+    return <img alt={alt} {...rest} data-testid="next-image" />;
   },
 }));
 
@@ -24,12 +34,12 @@ describe('Browser Component', () => {
   it('displays all main content sections', () => {
     render(<Browser />);
 
-    // Verifica el título
+    // Verificar el título
     expect(
       screen.getByRole('heading', { name: 'About Me' })
     ).toBeInTheDocument();
 
-    // Verifica texto importante
+    // Verificar texto importante
     expect(screen.getByText(/I'm Levi Zepeda/)).toBeInTheDocument();
     expect(screen.getByText(/Frontend developer/)).toBeInTheDocument();
     expect(
@@ -41,10 +51,11 @@ describe('Browser Component', () => {
 
   it('renders the profile image with correct attributes', () => {
     render(<Browser />);
-    const image = screen.getByAltText('Levi Zepeda');
+    const image = screen.getByTestId('next-image');
 
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', '/me.jpg');
+    expect(image).toHaveAttribute('alt', 'Levi Zepeda');
     expect(image).toHaveAttribute('width', '500');
     expect(image).toHaveAttribute('height', '500');
   });
@@ -52,7 +63,7 @@ describe('Browser Component', () => {
   it('applies correct styling classes', () => {
     render(<Browser />);
 
-    // Verifica el contenedor principal
+    // Verificar el contenedor principal
     const mainContainer = screen.getByTestId('browser-container');
     expect(mainContainer).toHaveClass(
       'bg-white',
@@ -61,7 +72,7 @@ describe('Browser Component', () => {
       'shadow-lg'
     );
 
-    // Verifica el contenedor del contenido
+    // Verificar el contenedor de contenido
     const contentContainer = screen.getByTestId('content-container');
     expect(contentContainer).toHaveClass(
       'bg-gray-100',
@@ -69,7 +80,7 @@ describe('Browser Component', () => {
       'rounded-lg'
     );
 
-    // Verifica el contenedor de la imagen
+    // Verificar el contenedor de la imagen
     const imageContainer = screen.getByTestId('image-container');
     expect(imageContainer).toHaveClass(
       'relative',
