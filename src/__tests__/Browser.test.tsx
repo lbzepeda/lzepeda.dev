@@ -41,12 +41,16 @@ describe('Browser Component', () => {
 
     // Verificar texto importante
     expect(screen.getByText(/I'm Levi Zepeda/)).toBeInTheDocument();
-    expect(screen.getByText(/Frontend developer/)).toBeInTheDocument();
+    expect(screen.getByText(/frontend developer/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/modern JavaScript technologies/)
+      screen.getByText(/TypeScript, Tailwind CSS, React, and Next.js/)
     ).toBeInTheDocument();
-    expect(screen.getByText(/continuous learning/)).toBeInTheDocument();
-    expect(screen.getByText(/innovation/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/critical financial platforms/)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/autonomy and attention to detail/)
+    ).toBeInTheDocument();
   });
 
   it('renders the profile image with correct attributes', () => {

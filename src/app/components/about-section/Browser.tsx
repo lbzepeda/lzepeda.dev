@@ -6,7 +6,7 @@ const Browser = () => {
   return (
     <div
       data-testid="browser-container"
-      className="bg-white dark:bg-gray-800 text-gray-800 dark:text-white font-mono p-2 md:p-4 rounded-lg shadow-lg w-full max-w-4xl mx-auto overflow-auto max-h-[85vh] md:max-h-none"
+      className="bg-white dark:bg-gray-800 text-gray-800 dark:text-white font-mono p-2 md:p-4 rounded-lg shadow-lg w-full max-w-4xl mx-auto overflow-auto max-h-[100vh] md:max-h-none"
     >
       <WindowHeader title="http://localhost:3000" />
       <div
@@ -22,28 +22,35 @@ const Browser = () => {
               About Me
             </h1>
             <p className="mt-2 md:mt-4 text-sm md:text-base text-gray-800 dark:text-gray-300">
-              I&apos;m Levi Zepeda, a{' '}
+              Hi! I&apos;m Levi Zepeda, a{' '}
               <span className="text-purple-500 dark:text-purple-400">
-                Frontend developer
+                frontend developer
               </span>{' '}
-              with backend experience. Working with{' '}
+              with backend expertise. I work with{' '}
               <span className="text-purple-500 dark:text-purple-400">
-                modern JavaScript technologies
-              </span>
-              , I create applications where design and performance work in
-              harmony.
+                TypeScript, Tailwind CSS, React, and Next.js
+              </span>{' '}
+              [and more...], using Git for collaborative projects.
             </p>
             <p className="mt-2 md:mt-4 text-sm md:text-base text-gray-800 dark:text-gray-300">
-              I&apos;m passionate about{' '}
+              I&apos;ve developed{' '}
               <span className="text-purple-500 dark:text-purple-400">
-                continuous learning
+                critical financial platforms
               </span>{' '}
+              across Central America, including systems for Uber driver payments
               and{' '}
               <span className="text-purple-500 dark:text-purple-400">
-                innovation
+                cross-border operations
               </span>
-              , developing systems used by many people across Central America.
-              Beyond coding, I value quality time with loved ones.
+              . My work is driven by{' '}
+              <span className="text-purple-500 dark:text-purple-400">
+                autonomy and attention to detail
+              </span>
+              , always focusing on the end user. Outside of coding, I enjoy{' '}
+              <span className="text-purple-500 dark:text-purple-400">
+                crossfit, traveling
+              </span>
+              , and spending time with family, friends, and my pets.
             </p>
           </div>
           <div
