@@ -28,9 +28,7 @@ describe('Hero Component', () => {
   it('renders initial state correctly', () => {
     render(<Hero />);
     expect(screen.getByText('Frontend developer')).toBeInTheDocument();
-    expect(
-      screen.getByText(/Frontend developer dedicado/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/As a frontend developer/i)).toBeInTheDocument();
   });
 
   it('types out the first title correctly', () => {
@@ -104,6 +102,22 @@ describe('Hero Component', () => {
   it('renders highlighted words with correct styling', () => {
     render(<Hero />);
 
+    // Array of highlighted words that should be present
+    const expectedHighlightedWords = [
+      'robust',
+      'clean',
+      'purposeful',
+      'user experience',
+      'accessibility',
+    ];
+
+    // Check each highlighted word
+    expectedHighlightedWords.forEach((word) => {
+      const element = screen.getByText(word);
+      expect(element).toHaveClass('text-purple-500', 'dark:text-purple-400');
+    });
+
+    // Check total number of highlighted elements
     const highlightedWords = screen.getAllByText((content, element) => {
       return (
         !!element?.className?.includes('text-purple-500') &&
@@ -112,9 +126,6 @@ describe('Hero Component', () => {
     });
 
     expect(highlightedWords).toHaveLength(5);
-    highlightedWords.forEach((word) => {
-      expect(word).toHaveClass('text-purple-500', 'dark:text-purple-400');
-    });
   });
 
   it('maintains responsive layout classes', () => {

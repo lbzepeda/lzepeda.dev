@@ -92,25 +92,21 @@ function Hero() {
           </div>
 
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
-            Frontend developer dedicado a construir experiencias digitales{' '}
+            As a frontend developer, I specialize in building{' '}
+            <span className="text-purple-500 dark:text-purple-400">robust</span>{' '}
+            digital experiences through{' '}
+            <span className="text-purple-500 dark:text-purple-400">clean</span>{' '}
+            and{' '}
             <span className="text-purple-500 dark:text-purple-400">
-              robustas
+              purposeful
             </span>{' '}
-            a través de interfaces{' '}
+            interfaces, placing great emphasis on{' '}
             <span className="text-purple-500 dark:text-purple-400">
-              limpias
+              user experience
             </span>{' '}
-            y{' '}
+            and{' '}
             <span className="text-purple-500 dark:text-purple-400">
-              propositivas
-            </span>
-            , con un fuerte enfoque en{' '}
-            <span className="text-purple-500 dark:text-purple-400">
-              experiencia de usuario
-            </span>{' '}
-            y{' '}
-            <span className="text-purple-500 dark:text-purple-400">
-              accesibilidad
+              accessibility
             </span>
             .
           </p>
