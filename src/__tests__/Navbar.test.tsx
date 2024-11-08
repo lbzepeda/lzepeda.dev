@@ -1,13 +1,21 @@
+import Navbar from '@/app/components/nav-bar/Navbar';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import Navbar from '@/app/components/nav-bar/Navbar';
+// Constants
+const THEME_COLORS = {
+  LIGHT: '0F172A',
+  DARK: 'FFFFFF',
+} as const;
 
-//Mock the ThemeContext with variables to control the theme
+const CSS_CLASSES = {
+  MENU_HIDDEN: 'translate-y-full',
+  MENU_VISIBLE: 'translate-y-0',
+} as const;
+
+// Mock setup
 let mockTheme = 'light';
-const traslateFullClass = 'translate-y-full';
 const mockToggleTheme = jest.fn();
 
-// Mock of the ThemeContext
 jest.mock('@/app/context/ThemeContext', () => ({
   useTheme: () => ({
     theme: mockTheme,
@@ -16,87 +24,114 @@ jest.mock('@/app/context/ThemeContext', () => ({
 }));
 
 describe('Navbar Component', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockTheme = 'light';
-  });
+  const renderNavbar = () => {
+    return render(<Navbar />);
+  };
 
-  it('renders without crashing', () => {
-    render(<Navbar />);
-    // Validating that all texts are present
-    const homeLinks = screen.getAllByText('Home');
-    const aboutLinks = screen.getAllByText('About Me');
-    const careerLinks = screen.getAllByText('Career');
-    const projectsLinks = screen.getAllByText('Projects');
-    const contactLinks = screen.getAllByText('Contact');
-    expect(homeLinks).toHaveLength(2);
-    expect(aboutLinks).toHaveLength(2);
-    expect(careerLinks).toHaveLength(2);
-    expect(projectsLinks).toHaveLength(2);
-    expect(contactLinks).toHaveLength(2);
-  });
-
-  it('shows correct theme button text based on theme', () => {
-    render(<Navbar />);
-    const themeText = screen.getByText((content) => content.includes('0F172A'));
-    expect(themeText).toBeInTheDocument();
-  });
-
-  it('calls toggleTheme when theme button is clicked', () => {
-    render(<Navbar />);
-    const themeButton = screen.getByText((content) =>
-      content.includes('0F172A')
+  const getHamburgerButton = () => screen.getByLabelText('Toggle menu');
+  const getMobileMenu = () => screen.getByTestId('mobile-menu');
+  const getThemeButton = () =>
+    screen.getByText((content) =>
+      content.includes(
+        mockTheme === 'light' ? THEME_COLORS.LIGHT : THEME_COLORS.DARK
+      )
     );
-    fireEvent.click(themeButton);
-    expect(mockToggleTheme).toHaveBeenCalledTimes(1);
+
+  beforeEach(() => {
+    mockTheme = 'light';
+    jest.clearAllMocks();
   });
 
-  it('toggles mobile menu when hamburger button is clicked', () => {
-    render(<Navbar />);
-    const mobileMenu = screen.getByTestId('mobile-menu');
-    const hamburgerButton = screen.getByLabelText('Toggle menu');
+  describe('Navigation Items', () => {
+    it('renders all navigation items in both desktop and mobile views', () => {
+      renderNavbar();
 
-    // Check initial state
-    expect(mobileMenu).toHaveClass(traslateFullClass);
+      const navigationItems = [
+        { text: 'Home', expectedCount: 2 },
+        { text: 'About Me', expectedCount: 2 },
+        { text: 'Career', expectedCount: 2 },
+        { text: 'Projects', expectedCount: 2 },
+        { text: 'Contact', expectedCount: 2 },
+      ];
 
-    // Open the menu
-    fireEvent.click(hamburgerButton);
-    expect(mobileMenu).toHaveClass('translate-y-0');
+      navigationItems.forEach(({ text, expectedCount }) => {
+        const items = screen.getAllByText(text);
+        expect(items).toHaveLength(expectedCount);
+      });
+    });
 
-    // Close the menu
-    fireEvent.click(hamburgerButton);
-    expect(mobileMenu).toHaveClass(traslateFullClass);
+    it('renders correct number of links including resume button', () => {
+      renderNavbar();
+      const links = screen.getAllByRole('link');
+      // 5 nav items × 2 (desktop + mobile) = 10 + 2 resume buttons = 12
+      expect(links).toHaveLength(12);
+    });
   });
 
-  it('closes mobile menu when a navigation item is clicked', () => {
-    render(<Navbar />);
-    const mobileMenu = screen.getByTestId('mobile-menu');
-    const hamburgerButton = screen.getByLabelText('Toggle menu');
+  describe('Theme Toggle', () => {
+    it('shows correct theme button text and toggles theme', () => {
+      renderNavbar();
+      const themeButton = getThemeButton();
 
-    // Open the menu
-    fireEvent.click(hamburgerButton);
-    expect(mobileMenu).toHaveClass('translate-y-0');
+      expect(themeButton).toHaveTextContent(`#${THEME_COLORS.LIGHT}`);
 
-    // Click on the Home link in the mobile menu
-    const homeLinks = screen.getAllByText('Home');
-    fireEvent.click(homeLinks[1]);
+      fireEvent.click(themeButton);
+      expect(mockToggleTheme).toHaveBeenCalledTimes(1);
+    });
 
-    // Check that the menu is closed
-    expect(mobileMenu).toHaveClass(traslateFullClass);
+    it('shows correct color code when theme is dark', () => {
+      mockTheme = 'dark';
+      renderNavbar();
+
+      const themeButton = getThemeButton();
+      expect(themeButton).toHaveTextContent(`#${THEME_COLORS.DARK}`);
+    });
   });
 
-  it('renders correct number of navigation items', () => {
-    render(<Navbar />);
-    const navigationItems = screen.getAllByRole('link');
-    expect(navigationItems).toHaveLength(10);
+  describe('Mobile Menu', () => {
+    it('handles mobile menu toggle correctly', () => {
+      renderNavbar();
+      const mobileMenu = getMobileMenu();
+      const hamburgerButton = getHamburgerButton();
+
+      // Initial state
+      expect(mobileMenu).toHaveClass(CSS_CLASSES.MENU_HIDDEN);
+
+      // Open menu
+      fireEvent.click(hamburgerButton);
+      expect(mobileMenu).toHaveClass(CSS_CLASSES.MENU_VISIBLE);
+
+      // Close menu
+      fireEvent.click(hamburgerButton);
+      expect(mobileMenu).toHaveClass(CSS_CLASSES.MENU_HIDDEN);
+    });
+
+    it('closes mobile menu when navigation item is clicked', () => {
+      renderNavbar();
+      const mobileMenu = getMobileMenu();
+
+      // Open menu
+      fireEvent.click(getHamburgerButton());
+      expect(mobileMenu).toHaveClass(CSS_CLASSES.MENU_VISIBLE);
+
+      // Click mobile navigation item
+      const mobileNavItems = screen.getAllByText('Home');
+      fireEvent.click(mobileNavItems[1]);
+
+      expect(mobileMenu).toHaveClass(CSS_CLASSES.MENU_HIDDEN);
+    });
   });
 
-  it('applies dark theme styles when theme is dark', () => {
-    // Change the theme to dark before rendering
-    mockTheme = 'dark';
+  describe('Resume Button', () => {
+    it('renders resume button with correct attributes', () => {
+      renderNavbar();
+      const resumeButtons = screen.getAllByText('Resume');
 
-    render(<Navbar />);
-    const themeText = screen.getByText((content) => content.includes('FFFFFF'));
-    expect(themeText).toBeInTheDocument();
+      resumeButtons.forEach((button) => {
+        const link = button.closest('a');
+        expect(link).toHaveAttribute('href', '/resume.pdf');
+        expect(link).toHaveAttribute('download');
+      });
+    });
   });
 });

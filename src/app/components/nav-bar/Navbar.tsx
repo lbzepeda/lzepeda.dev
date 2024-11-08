@@ -1,5 +1,7 @@
 'use client';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
+
+import { FileDown } from 'lucide-react';
 
 import { useTheme } from '../../context/ThemeContext';
 
@@ -11,13 +13,24 @@ const NAVIGATION_ITEMS = [
   { href: '#contact', label: 'Contact', number: ' 4.' },
 ] as const;
 
+const ResumeButton = () => (
+  <a
+    href="/resume.pdf"
+    download
+    className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-400 border dark:border-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+  >
+    <FileDown className="w-5 h-5" />
+    <span>Resume</span>
+  </a>
+);
+
 function Navbar() {
   const { toggleTheme, theme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = useCallback(() => {
-    setIsMenuOpen((prev) => !prev);
-  }, []);
+  // We disable this rule since it is a simple function and the cost of useCallback would be greater than the benefit
+  /* eslint-disable-next-line react-perf/jsx-no-new-function-as-prop */
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 z-50">
@@ -77,6 +90,7 @@ function Navbar() {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-slate-200 dark:bg-slate-700 group-hover:w-full transition-all duration-300"></span>
               </a>
             ))}
+            <ResumeButton />
           </div>
         </nav>
 
@@ -101,6 +115,7 @@ function Navbar() {
                 </span>
               </a>
             ))}
+            <ResumeButton />
           </div>
         </div>
       </div>
