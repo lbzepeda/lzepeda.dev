@@ -1,0 +1,14 @@
+:root {
+  /* Light mode */
+  --color-primary: #9333ea;
+  --color-primary-dark: #7c28cc;
+  --color-secondary: #059669;
+  --color-secondary-dark: #047857;
+}
+
+[data-theme="dark"] {
+  --color-primary: #a855f7;
+  --color-primary-dark: #9333ea;
+  --color-secondary: #10b981;
+  --color-secondary-dark: #059669;
+}

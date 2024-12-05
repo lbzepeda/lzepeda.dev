@@ -1,0 +1,10 @@
+/* base.css */
+:root {
+  --color-primary: #9333ea; /* purple-600 */
+  --color-secondary: #059669; /* emerald-600 */
+  --contrast-level: 1;
+}
+
+[data-theme="high-contrast"] {
+  --contrast-level: 1.5;
+}
