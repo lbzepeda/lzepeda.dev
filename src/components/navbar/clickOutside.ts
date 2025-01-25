@@ -3,7 +3,8 @@ export function clickOutside(node: HTMLElement, handler: () => void) {
     const target = event.target as Node;
     if (
       !node.contains(target) &&
-      !target.parentElement?.classList.contains("mobile-menu")
+      !target.parentElement?.classList.contains("mobile-menu") &&
+      !(target as Element).closest("#accessibility-menu-button")
     ) {
       handler();
     }

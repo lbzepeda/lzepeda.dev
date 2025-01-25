@@ -17,24 +17,4 @@ export default {
     },
   },
   plugins: [],
-  presets: [
-    {
-      theme: {
-        themes: {
-          purple: {
-            primary: "#9333ea",
-            secondary: "#059669",
-          },
-          blue: {
-            primary: "#2563eb",
-            secondary: "#059669",
-          },
-          green: {
-            primary: "#059669",
-            secondary: "#9333ea",
-          },
-        },
-      },
-    },
-  ],
 };

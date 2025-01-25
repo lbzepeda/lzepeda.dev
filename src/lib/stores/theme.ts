@@ -1,5 +1,9 @@
-// src/lib/stores/theme.ts
 import { writable } from "svelte/store";
+
+export const THEME_COLORS = {
+  LIGHT: "0F172A",
+  DARK: "FFFFFF",
+} as const;
 
 interface ThemeState {
   mode: "light" | "dark";
@@ -7,24 +11,27 @@ interface ThemeState {
   palette: "purple" | "blue" | "green";
 }
 
-const PALETTES = {
+export const PALETTES = {
   purple: {
     primary: "#9333ea",
     primaryDark: "#7c28cc",
     secondary: "#059669",
     secondaryDark: "#047857",
+    label: "Purple Harmony",
   },
   blue: {
     primary: "#2563eb",
     primaryDark: "#1d4ed8",
     secondary: "#059669",
     secondaryDark: "#047857",
+    label: "Ocean Blue",
   },
   green: {
     primary: "#059669",
     primaryDark: "#047857",
     secondary: "#9333ea",
     secondaryDark: "#7c28cc",
+    label: "Forest Green",
   },
 } as const;
 

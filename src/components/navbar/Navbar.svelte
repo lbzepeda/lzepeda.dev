@@ -1,20 +1,24 @@
 <script lang="ts">
   import { FileDown } from "lucide-svelte";
-  import { onMount } from "svelte";
   import { fade, slide } from "svelte/transition";
+  import { language } from "../../lib/stores/language";
   import { theme } from "../../lib/stores/theme";
+  import { translations, type NavKeys } from "../../lib/stores/translations";
+  import LanguageSelector from "./LanguageSelector.svelte";
   import ThemeControls from "./ThemeControls.svelte";
   import { clickOutside } from './clickOutside';
 
   let isMenuOpen = false;
   let navItems: {[key: string]: HTMLElement} = {};
 
-  const NAVIGATION_ITEMS = [
-    { href: "#home", label: "Home", number: " 0." },
-    { href: "#about", label: "About Me", number: " 1." },
-    { href: "#career", label: "Career", number: " 2." },
-    { href: "#project", label: "Projects", number: " 3." },
-    { href: "#contact", label: "Contact", number: " 4." },
+  $: t = translations[$language];
+
+  const NAVIGATION_ITEMS: Array<{ href: string; labelKey: NavKeys; number: string }> = [
+    { href: "#home", labelKey: "home", number: " 0." },
+    { href: "#about", labelKey: "about", number: " 1." },
+    { href: "#career", labelKey: "career", number: " 2." },
+    { href: "#project", labelKey: "projects", number: " 3." },
+    { href: "#contact", labelKey: "contact", number: " 4." },
   ];
 
   function handleNavClick(href: string) {
@@ -40,13 +44,6 @@
       handleNavClick(href);
     }
   }
-
-  onMount(() => {
-    window.addEventListener('keydown', (e) => handleKeyDown(e));
-    return () => {
-      window.removeEventListener('keydown', (e) => handleKeyDown(e));
-    };
-  });
 </script>
 
 <style>
@@ -74,7 +71,10 @@
       class="flex items-center justify-between h-16" 
       aria-label="Main navigation"
     >
-      <ThemeControls />
+      <div class="flex items-center gap-4">
+        <ThemeControls />
+        <LanguageSelector contrast={$theme.contrast} />
+      </div>
 
       <button
         class="md:hidden p-2 transition-colors mobile-menu text-slate-900 dark:text-white"
@@ -115,22 +115,22 @@
         role="menubar"
         aria-label="Desktop navigation menu"
       >
-      {#each NAVIGATION_ITEMS as item}
-        <a
-          href={item.href}
-          bind:this={navItems[item.href]}
-          on:click|preventDefault={() => handleNavClick(item.href)}
-          on:keydown={(e) => handleKeyDown(e, item.href)}
-          role="menuitem"
-          tabindex="0"
-          class="group text-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg p-2 {$theme.contrast === 'high' 
-            ? 'text-slate-900 dark:text-white font-medium' 
-            : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}"
-        >
-          <span>{item.label}</span>
-          <span class="sr-only">Section {item.number}</span>
-        </a>
-      {/each}
+        {#each NAVIGATION_ITEMS as item}
+          <a
+            href={item.href}
+            bind:this={navItems[item.href]}
+            on:click|preventDefault={() => handleNavClick(item.href)}
+            on:keydown={(e) => handleKeyDown(e, item.href)}
+            role="menuitem"
+            tabindex="0"
+            class="group text-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg p-2 {$theme.contrast === 'high' 
+              ? 'text-slate-900 dark:text-white font-medium' 
+              : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}"
+          >
+            <span>{t.nav[item.labelKey]}</span>
+            <span class="sr-only">Section {item.number}</span>
+          </a>
+        {/each}
         <a
           href="/levizepeda cv.pdf"
           download
@@ -138,47 +138,47 @@
             ? 'border-slate-400 dark:border-slate-500 text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700'
             : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}"
           role="button"
-          aria-label="Download resume (opens in new tab)"
+          aria-label={`${t.nav.resume} (opens in new tab)`}
           tabindex="0"
         >
           <FileDown class="w-5 h-5" aria-hidden="true" />
-          <span>Resume</span>
+          <span>{t.nav.resume}</span>
         </a>
       </div>
     </nav>
 
     <!-- Mobile Menu -->
     {#if isMenuOpen}
-    <div
-      id="mobile-menu"
-      in:fade={{ duration: 150 }}
-      out:slide={{ duration: 150 }}
-      class="md:hidden fixed inset-0 top-16 bg-white dark:bg-slate-900 z-40"
-      role="dialog"
-      aria-label="Mobile navigation menu" 
-      aria-modal="true"
-      use:clickOutside={closeMenu}
-    >
-      <div class="flex flex-col items-center pt-8 gap-8 menu-enter">
-        {#each NAVIGATION_ITEMS as item}
-          <a
-            href={item.href}
-            bind:this={navItems[item.href]}
-            on:click|preventDefault={() => handleNavClick(item.href)}
-            on:keydown={(e) => handleKeyDown(e, item.href)}
-            class="group text-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg p-2
-            {$theme.contrast === 'high'
-              ? 'text-slate-900 dark:text-white font-medium'
-              : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}"
-            role="menuitem"
-            tabindex="0"
-          >
-            <span>{item.label}</span>
-            <span class="sr-only">Section {item.number}</span>
-          </a>
-        {/each}
+      <div
+        id="mobile-menu"
+        in:fade={{ duration: 150 }}
+        out:slide={{ duration: 150 }}
+        class="md:hidden fixed inset-0 top-16 bg-white dark:bg-slate-900 z-40"
+        role="dialog"
+        aria-label="Mobile navigation menu" 
+        aria-modal="true"
+        use:clickOutside={closeMenu}
+      >
+        <div class="flex flex-col items-center pt-8 gap-8 menu-enter">
+          {#each NAVIGATION_ITEMS as item}
+            <a
+              href={item.href}
+              bind:this={navItems[item.href]}
+              on:click|preventDefault={() => handleNavClick(item.href)}
+              on:keydown={(e) => handleKeyDown(e, item.href)}
+              class="group text-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-lg p-2
+              {$theme.contrast === 'high'
+                ? 'text-slate-900 dark:text-white font-medium'
+                : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}"
+              role="menuitem"
+              tabindex="0"
+            >
+              <span>{t.nav[item.labelKey]}</span>
+              <span class="sr-only">Section {item.number}</span>
+            </a>
+          {/each}
+        </div>
       </div>
-    </div>
     {/if}
   </div>
 </header>

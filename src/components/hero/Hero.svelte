@@ -2,10 +2,14 @@
   import { onDestroy, onMount } from "svelte";
   import { flip } from 'svelte/animate';
   import { fade } from 'svelte/transition';
+  import { language } from "../../lib/stores/language";
   import { theme } from "../../lib/stores/theme";
+  import { translations } from "../../lib/stores/translations";
   import { titles } from "../../lib/types/titles";
   import type { TypingState } from './types';
   import { createTypingAnimation } from './typing';
+
+  $: t = translations[$language];
 
   const styles = {
     transitionClasses: "transition-colors duration-300",
@@ -91,45 +95,20 @@
           class="text-2xl md:text-3xl font-bold {styles.transitionClasses} {$theme.contrast === 'high' ? styles.highContrastTextClasses : styles.lowContrastTextClasses}"
           in:fade
         >
-          Fullstack Developer
+          {t.hero.role}
         </span>
       </div>
 
-      <p
-        class="text-lg {styles.transitionClasses} {$theme.contrast === 'high' ? styles.highContrastTextClasses + ' font-medium' : styles.lowContrastTextClasses} max-w-2xl"
-        in:fade={{ delay: 200 }}
-      >
-        As a fullstack developer, I craft
-        <span
-          class="{styles.transitionClasses} {$theme.contrast === 'high' ? styles.primaryTextHighContrastClasses : styles.primaryTextClasses}"
-        >
-          end-to-end
-        </span>
-        solutions through
-        <span
-          class="{styles.transitionClasses} {$theme.contrast === 'high' ? styles.primaryTextHighContrastClasses : styles.primaryTextClasses}"
-        >
-          scalable
-        </span>
-        architectures and
-        <span
-          class="{styles.transitionClasses} {$theme.contrast === 'high' ? styles.primaryTextHighContrastClasses : styles.primaryTextClasses}"
-        >
-          efficient
-        </span>
-        code. From
-        <span
-          class="{styles.transitionClasses} {$theme.contrast === 'high' ? styles.primaryTextHighContrastClasses : styles.primaryTextClasses}"
-        >
-          database design
-        </span>
-        to
-        <span
-          class="{styles.transitionClasses} {$theme.contrast === 'high' ? styles.primaryTextHighContrastClasses : styles.primaryTextClasses}"
-        >
-          user interfaces
-        </span>,
-        I build complete, performant applications.
+      <p class="text-lg {styles.transitionClasses} {$theme.contrast === 'high' ? styles.highContrastTextClasses + ' font-medium' : styles.lowContrastTextClasses} max-w-2xl" in:fade={{ delay: 200 }}>
+        {#each t.hero.description as chunk}
+          {#if chunk.highlight}
+            <span class="{styles.transitionClasses} {$theme.contrast === 'high' ? styles.primaryTextHighContrastClasses : styles.primaryTextClasses}">
+              {chunk.text}
+            </span>
+          {:else}
+            {chunk.text}
+          {/if}
+        {/each}
       </p>
     </div>
   </div>

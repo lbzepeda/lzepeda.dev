@@ -1,19 +1,18 @@
 <script lang="ts">
   import { CandyCane } from "lucide-svelte";
-  import { PALETTES, THEME_COLORS } from "../../lib/constants/theme";
-  import { theme } from "../../lib/stores/theme";
-
+  import { PALETTES, theme, THEME_COLORS } from "../../lib/stores/theme";
+  import { clickOutside } from "./clickOutside";
+ 
   let isPopoverOpen = false;
   let themeControls: HTMLDivElement;
-
+ 
   const styles = {
     highContrastClasses: 'border-slate-400 dark:border-slate-500 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700',
     normalContrastClasses: 'border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
   }
-</script>
-
-<div bind:this={themeControls} class="flex items-center gap-4 relative theme-controls">
-  <!-- Dark/Light Mode Button -->
+ </script>
+ 
+ <div bind:this={themeControls} class="flex items-center gap-4 relative theme-controls">
   <button
     on:click={theme.toggleMode}
     class="font-mono text-sm px-3 py-1.5 rounded-lg border transition-colors
@@ -24,8 +23,7 @@
   >
     #{$theme.mode === "light" ? THEME_COLORS.LIGHT : THEME_COLORS.DARK}
   </button>
-
-  <!-- Accessibility Button -->
+ 
   <div class="relative" role="presentation">
     <button
       id="accessibility-menu-button"
@@ -39,10 +37,11 @@
     >
       <CandyCane class="w-5 h-5" aria-hidden="true" />
     </button>
-
+ 
     {#if isPopoverOpen}
       <div
         id="accessibility-menu"
+        use:clickOutside={() => isPopoverOpen = false} 
         class="absolute mt-2 rounded-xl p-4 w-72 shadow-xl border transition-colors z-50
         {$theme.contrast === 'high'
           ? 'bg-slate-50 dark:bg-slate-900 border-slate-400 dark:border-slate-500'
@@ -50,8 +49,20 @@
         role="dialog"
         aria-modal="true"
         aria-labelledby="color-scheme-heading"
+        tabindex="-1"
       >
-        <!-- Color Palettes -->
+        <button
+          class="sr-only"
+          on:keydown={(e) => {
+            if (e.key === 'Escape') {
+              isPopoverOpen = false;
+              document.getElementById('accessibility-menu-button')?.focus();
+            }
+          }}
+        >
+          Close menu
+        </button>
+ 
         <div class="mb-4">
           <h3
             id="color-scheme-heading"
@@ -91,8 +102,7 @@
             {/each}
           </div>
         </div>
-
-        <!-- Contrast Toggle -->
+ 
         <div>
           <h3
             id="contrast-heading"
