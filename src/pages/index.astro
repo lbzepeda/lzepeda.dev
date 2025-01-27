@@ -1,4 +1,5 @@
 ---
+import About from "../components/about/About.astro";
 import Hero from "../components/hero/Hero.svelte";
 import Navbar from "../components/navbar/Navbar.svelte";
 import Layout from "../layouts/Layout.astro";
@@ -8,5 +9,6 @@ import Layout from "../layouts/Layout.astro";
   <body>
     <Navbar client:load />
     <Hero client:load />
+    <About />
   </body>
 </Layout>
