@@ -1,0 +1,14 @@
+---
+// Career.astro
+import CareerContent from "./CareerContent.svelte";
+---
+
+<section
+  id="career"
+  data-testid="career-section"
+  class="pt-20 pb-8 md:py-24 bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen"
+  aria-label="Career History Section">
+  <div class="mx-auto px-3 md:px-4 max-w-3xl">
+    <CareerContent client:visible />
+  </div>
+</section>
