@@ -11,6 +11,12 @@ export const THEME_COLORS = {
   DARK: "FFFFFF",
 } as const;
 
+const defaultState: ThemeState = {
+  mode: "light",
+  contrast: "normal",
+  palette: "purple",
+};
+
 // Sistema de Tokens de Diseño
 export const DESIGN_TOKENS = {
   technologyList: {
@@ -573,6 +579,13 @@ function createThemeStore() {
     };
   }
 
+  function getViewFilterClasses(type: "selected" | "default") {
+    return (value: ThemeState = defaultState) => {
+      const token = DESIGN_TOKENS.viewSelector.button[type];
+      return `${DESIGN_TOKENS.viewSelector.button.base} ${token[value?.contrast || "normal"].light} ${token[value?.contrast || "normal"].dark}`;
+    };
+  }
+
   // API pública
   return {
     subscribe: store.subscribe,
@@ -595,6 +608,7 @@ function createThemeStore() {
     getHighlightTextClasses,
     getBackgroundClasses,
     getBorderClasses,
+    getViewFilterClasses,
   };
 }
 

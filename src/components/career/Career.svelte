@@ -1,11 +1,12 @@
 <!-- Career.svelte -->
 <script lang="ts">
-  import { Filter, GitBranch } from "lucide-svelte";
+  import { GitBranch } from "lucide-svelte";
   import { language } from "../../lib/stores/language";
   import { theme } from "../../lib/stores/theme";
   import { translations } from "../../lib/stores/translations";
   import { career, filteredCareers } from "../../lib/stores/useCareer";
   import CategoryButtonFilter from "./category-section/CategoryButtonFilter.svelte";
+  import Filter from "./category-section/Filter.svelte";
   import GitLogView from "./content-section/GitLogView.svelte";
   import TimelineView from "./content-section/TimelineView.svelte";
 
