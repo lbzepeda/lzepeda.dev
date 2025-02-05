@@ -1,30 +1,27 @@
 <script lang="ts">
-  import { theme } from "../../../lib/stores/theme";
+  import { language } from "../../../lib/stores/language";
+  import { translations } from "../../../lib/stores/translations";
+  import { career } from "../../../lib/stores/useCareer";
 
-  export let category: string;
-  export let technologies: string[];
-  export let selectedTechs: Set<string>;
-  export let toggleTech: (tech: string) => () => void;
-  export let careerButomClass: string;
+  export let category: "development" | "infrastructure" | "methodologies" | "integrations";
+  export let techs: string[];
+  export let buttonClass: string;
 
-  $: buttonClasses =
-    $theme.contrast === "high"
-      ? "text-sm font-medium text-secondary dark:text-secondary-dark"
-      : "text-xs text-secondary dark:text-secondary-dark";
+  $: t = translations[$language].career.categories;
 </script>
 
-{#if technologies.length > 0}
+{#if techs.length > 0}
   <div class="mb-2">
     <h4 class="text-xs text-gray-700 dark:text-gray-300 capitalize mb-1">
-      {category}:
+      {t[category]}:
     </h4>
     <div class="flex flex-wrap gap-1.5">
-      {#each technologies as tech}
+      {#each techs as tech}
         <button
-          on:click={toggleTech(tech)}
-          class="px-2 py-0.5 rounded-full transition-colors {buttonClasses} {selectedTechs.has(tech)
-            ? careerButomClass
-            : 'bg-secondary/10 dark:bg-secondary-dark/10 border border-secondary/20 dark:border-secondary-dark/20'}">
+          on:click={() => career.toggleTech(tech)}
+          class="px-2 py-0.5 text-xs rounded-full transition-colors {$career.selectedTechs.has(tech)
+            ? buttonClass
+            : 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300'}">
           {tech}
         </button>
       {/each}

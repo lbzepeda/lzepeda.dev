@@ -1,6 +1,5 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from "svelte";
-  import { derived } from "svelte/store";
   import { fade } from "svelte/transition";
   import { theme } from "../../lib/stores/theme";
   import TerminalHeader from "./TerminalHeader.svelte";
@@ -22,12 +21,16 @@
     RESET: 1200,
   } as const;
 
-  const styles = {
-    transitionClasses: "transition-colors duration-300",
-    highContrastTextClasses: "text-slate-900 dark:text-white",
-    lowContrastTextClasses: "text-slate-700 dark:text-slate-300",
-    primaryTextClasses: "text-primary dark:text-primary-dark",
-    primaryTextHighContrastClasses: "text-primary-dark dark:text-primary font-semibold",
+  // Obtenemos las clases usando los nuevos helpers
+  const getClasses = {
+    container: theme.getBackgroundClasses("primary"),
+    content: ($theme: any) => `bg-gray-100 dark:bg-black transition-colors duration-300`,
+    command: theme.getHighlightTextClasses(),
+    info: theme.getTextClasses("base", "body"),
+    next: theme.getHighlightTextClasses(),
+    success: theme.getHighlightTextClasses(),
+    default: theme.getTextClasses("base", "body"),
+    cursor: theme.getTextClasses("h2", "heading"),
   };
 
   type LineType = "command" | "info" | "next" | "success" | "default";
@@ -52,25 +55,6 @@
   let currentChar = 0;
   let displayedLines: string[] = [];
   let animationState = AnimationState.IDLE;
-
-  const terminalColors = derived(theme, $theme => ({
-    command:
-      $theme.contrast === "high"
-        ? styles.primaryTextHighContrastClasses
-        : styles.primaryTextClasses,
-    info:
-      $theme.contrast === "high" ? styles.highContrastTextClasses : styles.lowContrastTextClasses,
-    next:
-      $theme.contrast === "high"
-        ? styles.primaryTextHighContrastClasses
-        : styles.primaryTextClasses,
-    success:
-      $theme.contrast === "high"
-        ? styles.primaryTextHighContrastClasses
-        : styles.primaryTextClasses,
-    default:
-      $theme.contrast === "high" ? styles.highContrastTextClasses : styles.lowContrastTextClasses,
-  }));
 
   function resetAnimation() {
     currentLine = 0;
@@ -134,25 +118,23 @@
   role="log"
   aria-live="polite"
   aria-label="Terminal Output"
-  class="bg-white dark:bg-slate-900 font-mono p-4 rounded-lg shadow-lg w-full max-w-4xl mx-auto {styles.transitionClasses}">
+  class="{getClasses.container(
+    $theme,
+  )} font-mono p-4 rounded-lg shadow-lg w-full max-w-4xl mx-auto">
   <TerminalHeader />
-  <div class="bg-gray-100 dark:bg-black rounded-md p-4 font-mono {styles.transitionClasses}">
+  <div class="{getClasses.content($theme)} rounded-md p-4 font-mono">
     <div
       class="space-y-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
       <div class="min-w-fit">
         {#each displayedLines as line, index}
           <div
-            class="whitespace-pre text-sm sm:text-base md:text-lg {$terminalColors[
+            class="whitespace-pre text-sm sm:text-base md:text-lg {getClasses[
               terminalLines[index]?.type || 'default'
-            ]} {styles.transitionClasses}"
+            ]($theme)}"
             transition:fade>
             {line}
             {#if index === currentLine}
-              <span
-                aria-hidden="true"
-                class="animate-pulse ml-0.5 {$theme.contrast === 'high'
-                  ? styles.highContrastTextClasses
-                  : styles.lowContrastTextClasses}">
+              <span aria-hidden="true" class="animate-pulse ml-0.5 {getClasses.cursor($theme)}">
                 ▊
               </span>
             {/if}

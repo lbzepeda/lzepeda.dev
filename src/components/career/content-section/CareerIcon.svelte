@@ -7,10 +7,10 @@
 
 <div class="shrink-0 pt-1">
   {#if mergeFrom}
-    <GitMerge class="w-6 h-6 md:w-8 md:h-8 text-orange-700 dark:text-orange-300" />
+    <GitMerge size={32} class="text-orange-700 dark:text-orange-300" />
   {:else if branch.includes("feature/")}
-    <GitBranchPlus class="w-6 h-6 md:w-8 md:h-8 text-violet-700 dark:text-violet-300" />
+    <GitBranchPlus size={32} class="text-violet-700 dark:text-violet-300" />
   {:else}
-    <GitCommit class="w-6 h-6 md:w-8 md:h-8 text-emerald-700 dark:text-emerald-300" />
+    <GitCommit size={32} class="text-emerald-700 dark:text-emerald-300" />
   {/if}
 </div>

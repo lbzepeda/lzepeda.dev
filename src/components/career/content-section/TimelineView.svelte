@@ -1,50 +1,67 @@
 <script lang="ts">
-  import type { careerData } from "../careerData";
+  import { language } from "../../../lib/stores/language";
+  import { translations } from "../../../lib/stores/translations";
+  import { filteredCareers } from "../../../lib/stores/useCareer";
   import CareerContent from "./CareerContent.svelte";
   import CareerHeader from "./CareerHeader.svelte";
   import CareerIcon from "./CareerIcon.svelte";
 
-  export let filteredCareers: typeof careerData;
-  export let expandedId: number | null;
-  export let selectedTechs: Set<string>;
-  export let toggleExpand: (id: number) => () => void;
-  export let toggleTech: (tech: string) => () => void;
-  export let careerButomClass: string;
+  type Role = {
+    title: string;
+    date: string;
+    description: string;
+    branch: string;
+    achievements: string[];
+  };
+
+  type RoleKeys = "tech_leader" | "senior_dev" | "junior_dev" | "system_dev" | "ceo";
+
+  type CareerTranslations = {
+    roles: Record<RoleKeys, Role>;
+    title: string;
+    timeline: string;
+    gitLog: string;
+    noResults: string;
+    categories: {
+      development: string;
+      infrastructure: string;
+      methodologies: string;
+      integrations: string;
+    };
+  };
+
+  $: t = translations[$language].career as unknown as CareerTranslations;
 </script>
 
 <div data-testid="timeline-container" class="space-y-6 md:space-y-8">
-  {#each filteredCareers as career (career.id)}
+  {#each $filteredCareers as career}
     <div class="relative">
       <div class="flex gap-2 md:gap-3">
-        <CareerIcon mergeFrom={career.mergeFrom === "true"} branch={career.branch} />
+        <CareerIcon
+          mergeFrom={career.roleKey === "senior_dev"}
+          branch={t.roles[career.roleKey as RoleKeys].branch} />
 
         <div class="flex-1 min-w-0">
           <CareerHeader
-            title={career.title}
+            careerData={career}
+            title={t.roles[career.roleKey as RoleKeys].title}
             isFavorite={career.isFavorite}
-            date={career.date}
-            id={career.id}
-            {expandedId}
-            {toggleExpand} />
+            date={t.roles[career.roleKey as RoleKeys].date} />
 
           <CareerContent
-            description={career.description}
+            careerItem={career}
+            description={t.roles[career.roleKey as RoleKeys].description}
             technologies={career.technologies}
-            achievements={career.achievements}
-            branch={career.branch}
-            {expandedId}
-            careerId={career.id}
-            {selectedTechs}
-            {toggleTech}
-            {careerButomClass} />
+            achievements={t.roles[career.roleKey as RoleKeys].achievements}
+            branch={t.roles[career.roleKey as RoleKeys].branch} />
         </div>
       </div>
     </div>
   {/each}
 
-  {#if filteredCareers.length === 0}
+  {#if $filteredCareers.length === 0}
     <div class="text-center py-8 text-sm text-gray-500 dark:text-gray-400">
-      No experiences found with the selected technologies.
+      {t.noResults}
     </div>
   {/if}
 </div>

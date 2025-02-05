@@ -1,26 +1,22 @@
-<script context="module" lang="ts">
-  export interface TechnologyCategories {
-    development: string[];
-    infrastructure: string[];
-    methodologies: string[];
-    integrations: string[];
-  }
-</script>
-
 <script lang="ts">
+  import { language } from "../../../lib/stores/language";
+  import { translations } from "../../../lib/stores/translations";
+  import { career } from "../../../lib/stores/useCareer";
+  import type { CareerData } from "../CareerData";
   import TechCategory from "./TechCategory.svelte";
 
   export let description: string;
-  export let technologies: TechnologyCategories;
+  export let technologies: CareerData["technologies"];
   export let achievements: string[];
   export let branch: string;
-  export let expandedId: number | null;
-  export let careerId: number;
-  export let selectedTechs: Set<string>;
-  export let toggleTech: (tech: string) => () => void;
-  export let careerButomClass: string;
+  export let careerItem: CareerData;
 
-  $: isExpanded = expandedId === careerId;
+  type TechnologyCategory = "development" | "infrastructure" | "methodologies" | "integrations";
+
+  $: t = translations[$language].career;
+  $: isExpanded = $career.expandedId === careerItem.id;
+  $: buttonClass =
+    "bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-600";
 </script>
 
 <div
@@ -37,37 +33,15 @@
       </p>
 
       <div class="mb-4 space-y-2">
-        <TechCategory
-          category="Development"
-          technologies={technologies.development}
-          {selectedTechs}
-          {toggleTech}
-          {careerButomClass} />
-        <TechCategory
-          category="Infrastructure"
-          technologies={technologies.infrastructure}
-          {selectedTechs}
-          {toggleTech}
-          {careerButomClass} />
-        <TechCategory
-          category="Methodologies"
-          technologies={technologies.methodologies}
-          {selectedTechs}
-          {toggleTech}
-          {careerButomClass} />
-        <TechCategory
-          category="Integrations"
-          technologies={technologies.integrations}
-          {selectedTechs}
-          {toggleTech}
-          {careerButomClass} />
+        {#each Object.entries(technologies) as [category, techs]}
+          <TechCategory category={category as TechnologyCategory} {techs} {buttonClass} />
+        {/each}
       </div>
 
       <ul class="space-y-2 mb-3">
-        {#each achievements as achievement, achIndex}
+        {#each achievements as achievement}
           <li class="flex items-start gap-2 text-xs md:text-sm text-gray-700 dark:text-gray-300">
-            <span class="mt-1.5 h-1 w-1 rounded-full bg-emerald-700 dark:bg-emerald-300 shrink-0">
-            </span>
+            <span class="mt-1.5 h-1 w-1 rounded-full bg-emerald-700 dark:bg-emerald-300 shrink-0" />
             {achievement}
           </li>
         {/each}

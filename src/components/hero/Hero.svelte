@@ -11,12 +11,12 @@
 
   $: t = translations[$language];
 
-  const styles = {
-    transitionClasses: "transition-colors duration-300",
-    highContrastTextClasses: "text-slate-900 dark:text-white",
-    lowContrastTextClasses: "text-slate-700 dark:text-slate-300",
-    primaryTextClasses: "text-primary dark:text-primary-dark",
-    primaryTextHighContrastClasses: "text-primary-dark dark:text-primary font-semibold",
+  const getClasses = {
+    section: theme.getBackgroundClasses("primary"),
+    heading: theme.getTextClasses("h1", "heading"),
+    subheading: theme.getTextClasses("h2", "heading"),
+    description: theme.getTextClasses("large", "body"),
+    highlight: theme.getHighlightTextClasses(),
   };
 
   let cursorRef: HTMLSpanElement;
@@ -61,10 +61,10 @@
 <section
   data-testid="hero-section"
   id="home"
-  class="min-h-screen w-full flex items-center justify-center bg-white dark:bg-slate-900 {styles.transitionClasses} {$theme.contrast ===
-  'high'
-    ? 'border-b border-slate-300 dark:border-slate-600'
-    : ''}">
+  class="{getClasses.section(
+    $theme,
+  )} min-h-screen w-full flex items-center justify-center transition-colors duration-300
+    {$theme.contrast === 'high' ? theme.getBorderClasses('default')($theme) + ' border-b' : ''}">
   <div class="w-full max-w-[1100px] px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col items-start gap-6">
       <div class="flex flex-col gap-2">
@@ -72,43 +72,28 @@
           aria-label="Animated title"
           role="heading"
           aria-level={1}
-          class="group font-mono text-4xl md:text-6xl font-bold relative {styles.transitionClasses}">
+          class="group font-mono text-4xl md:text-6xl font-bold relative">
           {#each renderTitle() as part (part.key)}
-            <span class={part.className + " " + styles.transitionClasses} animate:flip>
+            <span class={part.className + " transition-colors duration-300"} animate:flip>
               {part.text}
             </span>
           {/each}
           {#if !state.isComplete}
-            <span
-              bind:this={cursorRef}
-              class="text-slate-900 dark:text-white {styles.transitionClasses}"
-              aria-hidden="true">
+            <span bind:this={cursorRef} class={getClasses.heading($theme)} aria-hidden="true">
               |
             </span>
           {/if}
         </div>
 
-        <span
-          class="text-2xl md:text-3xl font-bold {styles.transitionClasses} {$theme.contrast ===
-          'high'
-            ? styles.highContrastTextClasses
-            : styles.lowContrastTextClasses}"
-          in:fade>
+        <span class="text-2xl md:text-3xl font-bold {getClasses.subheading($theme)}" in:fade>
           {t.hero.role}
         </span>
       </div>
 
-      <p
-        class="text-lg {styles.transitionClasses} {$theme.contrast === 'high'
-          ? styles.highContrastTextClasses + ' font-medium'
-          : styles.lowContrastTextClasses} max-w-2xl"
-        in:fade={{ delay: 200 }}>
+      <p class="text-lg {getClasses.description($theme)} max-w-2xl" in:fade={{ delay: 200 }}>
         {#each t.hero.description as chunk}
           {#if chunk.highlight}
-            <span
-              class="{styles.transitionClasses} {$theme.contrast === 'high'
-                ? styles.primaryTextHighContrastClasses
-                : styles.primaryTextClasses}">
+            <span class={getClasses.highlight($theme)}>
               {chunk.text}
             </span>
           {:else}
