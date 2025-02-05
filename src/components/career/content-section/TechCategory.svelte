@@ -1,13 +1,13 @@
 <script lang="ts">
   import { language } from "../../../lib/stores/language";
-  import { translations } from "../../../lib/stores/translations";
   import { career } from "../../../lib/stores/useCareer";
+  import { careerTranslations } from "../career-translations";
 
   export let category: "development" | "infrastructure" | "methodologies" | "integrations";
   export let techs: string[];
   export let buttonClass: string;
 
-  $: t = translations[$language].career.categories;
+  $: t = careerTranslations[$language].career.categories;
 </script>
 
 {#if techs.length > 0}

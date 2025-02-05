@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CandyCane } from "lucide-svelte";
+  import { Wand } from "lucide-svelte";
   import { PALETTES, theme, THEME_COLORS } from "../../lib/stores/theme";
   import { clickOutside } from "./clickOutside";
 
@@ -35,7 +35,7 @@
       aria-expanded={isPopoverOpen}
       aria-controls="accessibility-menu"
       aria-haspopup="dialog">
-      <CandyCane class="w-5 h-5" aria-hidden="true" />
+      <Wand class="w-5 h-5" aria-hidden="true" />
     </button>
 
     {#if isPopoverOpen}

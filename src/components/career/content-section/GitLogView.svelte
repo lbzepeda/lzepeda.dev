@@ -2,7 +2,7 @@
   import { Coffee } from "lucide-svelte";
   import { language } from "../../../lib/stores/language";
   import { DESIGN_TOKENS, theme } from "../../../lib/stores/theme";
-  import { translations } from "../../../lib/stores/translations";
+  import { careerTranslations } from "../career-translations";
   import type { CareerData } from "../CareerData";
 
   export let careers: CareerData[];
@@ -11,7 +11,7 @@
     [key: string]: Role;
   };
 
-  $: t = translations[$language].career as unknown as {
+  $: t = careerTranslations[$language].career as unknown as {
     categories: any;
     roles: Roles;
   };

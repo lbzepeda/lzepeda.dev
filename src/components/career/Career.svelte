@@ -3,14 +3,14 @@
   import { GitBranch } from "lucide-svelte";
   import { language } from "../../lib/stores/language";
   import { DESIGN_TOKENS, theme } from "../../lib/stores/theme";
-  import { translations } from "../../lib/stores/translations";
   import { career, filteredCareers } from "../../lib/stores/useCareer";
+  import { careerTranslations } from "./career-translations";
   import CategoryButtonFilter from "./category-section/CategoryButtonFilter.svelte";
   import Filter from "./category-section/Filter.svelte";
   import GitLogView from "./content-section/GitLogView.svelte";
   import TimelineView from "./content-section/TimelineView.svelte";
 
-  $: t = translations[$language].career;
+  $: t = careerTranslations[$language].career;
   $: selectedTechsCount = $career.selectedTechs.size;
 
   const getClasses = {

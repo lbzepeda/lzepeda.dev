@@ -3,12 +3,12 @@
   import { X } from "lucide-svelte";
   import { language } from "../../../lib/stores/language";
   import { DESIGN_TOKENS, theme } from "../../../lib/stores/theme";
-  import { translations } from "../../../lib/stores/translations";
   import { career } from "../../../lib/stores/useCareer";
+  import { careerTranslations } from "../career-translations";
   import { allTechnologies } from "../CareerData";
   import ViewFilterSelector from "./ViewFilterSelector.svelte";
 
-  $: t = translations[$language].career;
+  $: t = careerTranslations[$language].career;
   $: selectedTechsCount = $career.selectedTechs.size;
 
   // Get theme-aware classes using the design tokens

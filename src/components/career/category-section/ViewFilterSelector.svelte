@@ -2,10 +2,10 @@
 <script lang="ts">
   import { language } from "../../../lib/stores/language";
   import { DESIGN_TOKENS, theme } from "../../../lib/stores/theme";
-  import { translations } from "../../../lib/stores/translations";
   import { career } from "../../../lib/stores/useCareer";
+  import { careerTranslations } from "../career-translations";
 
-  $: t = translations[$language].career;
+  $: t = careerTranslations[$language].career;
 
   const getClasses = {
     button: ($theme: { contrast: "normal" | "high" }, isSelected: boolean) => `

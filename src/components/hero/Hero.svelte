@@ -4,12 +4,12 @@
   import { fade } from "svelte/transition";
   import { language } from "../../lib/stores/language";
   import { theme } from "../../lib/stores/theme";
-  import { translations } from "../../lib/stores/translations";
   import { titles } from "../../lib/types/titles";
+  import { getHeroTranslations } from "./hero-translations";
   import type { TypingState } from "./types";
   import { createTypingAnimation } from "./typing";
 
-  $: t = translations[$language];
+  $: heroTranslations = getHeroTranslations($language);
 
   const getClasses = {
     section: theme.getBackgroundClasses("primary"),
@@ -86,12 +86,12 @@
         </div>
 
         <span class="text-2xl md:text-3xl font-bold {getClasses.subheading($theme)}" in:fade>
-          {t.hero.role}
+          {heroTranslations.role}
         </span>
       </div>
 
       <p class="text-lg {getClasses.description($theme)} max-w-2xl" in:fade={{ delay: 200 }}>
-        {#each t.hero.description as chunk}
+        {#each heroTranslations.description as chunk}
           {#if chunk.highlight}
             <span class={getClasses.highlight($theme)}>
               {chunk.text}

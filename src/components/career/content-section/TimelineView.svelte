@@ -1,7 +1,7 @@
 <script lang="ts">
   import { language } from "../../../lib/stores/language";
-  import { translations } from "../../../lib/stores/translations";
   import { filteredCareers } from "../../../lib/stores/useCareer";
+  import { careerTranslations } from "../career-translations";
   import CareerContent from "./CareerContent.svelte";
   import CareerHeader from "./CareerHeader.svelte";
   import CareerIcon from "./CareerIcon.svelte";
@@ -30,7 +30,7 @@
     };
   };
 
-  $: t = translations[$language].career as unknown as CareerTranslations;
+  $: t = careerTranslations[$language].career as unknown as CareerTranslations;
 </script>
 
 <div data-testid="timeline-container" class="space-y-6 md:space-y-8">

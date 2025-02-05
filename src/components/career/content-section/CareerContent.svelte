@@ -1,7 +1,7 @@
 <script lang="ts">
   import { language } from "../../../lib/stores/language";
-  import { translations } from "../../../lib/stores/translations";
   import { career } from "../../../lib/stores/useCareer";
+  import { careerTranslations } from "../career-translations";
   import type { CareerData } from "../CareerData";
   import TechCategory from "./TechCategory.svelte";
 
@@ -13,7 +13,7 @@
 
   type TechnologyCategory = "development" | "infrastructure" | "methodologies" | "integrations";
 
-  $: t = translations[$language].career;
+  $: t = careerTranslations[$language].career;
   $: isExpanded = $career.expandedId === careerItem.id;
   $: buttonClass =
     "bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-600";
@@ -41,7 +41,8 @@
       <ul class="space-y-2 mb-3">
         {#each achievements as achievement}
           <li class="flex items-start gap-2 text-xs md:text-sm text-gray-700 dark:text-gray-300">
-            <span class="mt-1.5 h-1 w-1 rounded-full bg-emerald-700 dark:bg-emerald-300 shrink-0" />
+            <span class="mt-1.5 h-1 w-1 rounded-full bg-emerald-700 dark:bg-emerald-300 shrink-0">
+            </span>
             {achievement}
           </li>
         {/each}

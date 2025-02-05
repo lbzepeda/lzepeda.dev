@@ -3,13 +3,12 @@
   import { fade } from "svelte/transition";
   import { language } from "../../lib/stores/language";
   import { theme } from "../../lib/stores/theme";
-  import { translations } from "../../lib/stores/translations";
+  import { getAboutTranslations } from "./about-translations";
   import WindowHeader from "./WindowHeader.svelte";
 
   const dispatch = createEventDispatcher();
-  $: t = translations[$language];
+  $: aboutTranslations = getAboutTranslations($language);
 
-  // Obtenemos las clases usando los nuevos helpers
   const getClasses = {
     container: theme.getBackgroundClasses("primary"),
     content: ($theme: any) =>
@@ -66,11 +65,11 @@
         <h1
           id="browser-title"
           class="text-xl sm:text-2xl md:text-3xl font-bold {getClasses.title($theme)}">
-          {t.about.title}
+          {aboutTranslations.title}
         </h1>
         <div class="mt-2 md:mt-4 max-w-2xl">
           <p class="text-base sm:text-lg {getClasses.text($theme)}">
-            {#each t.about.intro as chunk}
+            {#each aboutTranslations.intro as chunk}
               {#if chunk.highlight}
                 <span class={getClasses.highlight($theme)}>
                   {chunk.text}
@@ -83,7 +82,7 @@
           <p
             class="mt-3 sm:mt-4 text-base sm:text-lg {getClasses.text($theme)}"
             in:fade={{ delay: 200, duration: 300 }}>
-            {#each t.about.experience as chunk}
+            {#each aboutTranslations.experience as chunk}
               {#if chunk.highlight}
                 <span class={getClasses.highlight($theme)}>
                   {chunk.text}
