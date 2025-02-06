@@ -3,6 +3,7 @@ import About from "../components/about/About.astro";
 import Career from "../components/career/Career.svelte";
 import Hero from "../components/hero/Hero.svelte";
 import Navbar from "../components/navbar/Navbar.svelte";
+import Project from "../components/project/Project.svelte";
 import Layout from "../layouts/Layout.astro";
 ---
 
@@ -12,5 +13,6 @@ import Layout from "../layouts/Layout.astro";
     <Hero client:load />
     <About />
     <Career client:load />
+    <Project client:load />
   </body>
 </Layout>
