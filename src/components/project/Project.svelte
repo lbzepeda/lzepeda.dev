@@ -43,12 +43,14 @@
   <div class="container relative mx-auto px-4">
     <div class="max-w-2xl mx-auto text-center mb-16">
       <h2
-        class="text-lg md:text-3xl font-mono {getClasses.headerTitle($theme)} {isHighContrast
-          ? 'font-bold dark:text-white'
-          : ''}">
+        class="{theme.getTextClasses('h2', 'heading')($theme)} text-4xl {isHighContrast
+          ? 'font-bold'
+          : 'font-semibold'} mb-4">
         {t.title}
       </h2>
+
       <div class="w-24 h-1 bg-primary dark:bg-primary-dark mx-auto mb-8 rounded-full"></div>
+
       <p
         class={isHighContrast
           ? "text-slate-900 dark:text-white font-medium"
