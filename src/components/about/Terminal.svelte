@@ -96,8 +96,10 @@
   }
 
   onMount(() => {
-    animationState = AnimationState.RUNNING;
-    animateTerminal();
+    if (isVisible) {
+      animationState = AnimationState.RUNNING;
+      animateTerminal();
+    }
   });
 
   $: if (isVisible && animationState === AnimationState.COMPLETED) {
@@ -105,8 +107,9 @@
     animateTerminal();
   }
 
-  $: if (!isVisible) {
-    animationState = AnimationState.COMPLETED;
+  $: if (isVisible && animationState === AnimationState.IDLE) {
+    animationState = AnimationState.RUNNING;
+    animateTerminal();
   }
 
   onDestroy(() => {

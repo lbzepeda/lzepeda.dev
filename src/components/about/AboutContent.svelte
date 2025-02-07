@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { theme } from "../../lib/stores/theme";
   import Browser from "./Browser.svelte";
   import Terminal from "./Terminal.svelte";
@@ -29,6 +30,22 @@
     isAnimating = true;
     currentComponent = "terminal";
   }
+
+  let isVisible = false;
+
+  onMount(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.1 },
+    );
+
+    const element = document.getElementById("about");
+    if (element) observer.observe(element);
+
+    return () => observer.disconnect();
+  });
 </script>
 
 <div
@@ -41,7 +58,7 @@
           class="w-full transition-all duration-300 opacity-0 translate-y-4 px-2 sm:px-4"
           class:opacity-100={currentComponent === "terminal"}
           class:translate-y-0={currentComponent === "terminal"}>
-          <Terminal on:animationComplete={handleTerminalComplete} />
+          <Terminal {isVisible} on:animationComplete={handleTerminalComplete} />
         </div>
       {:else}
         <div

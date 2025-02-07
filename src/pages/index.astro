@@ -1,5 +1,5 @@
 ---
-import About from "../components/about/About.astro";
+import About from "../components/about/About.svelte";
 import Career from "../components/career/Career.svelte";
 import Contact from "../components/contact/Contact.svelte";
 import Footer from "../components/footer/Footer.svelte";
@@ -13,7 +13,7 @@ import Layout from "../layouts/Layout.astro";
   <body>
     <Navbar client:load />
     <Hero client:load />
-    <About client:load />
+    <About client:visible />
     <Career client:load />
     <Project client:load />
     <Contact client:load />
