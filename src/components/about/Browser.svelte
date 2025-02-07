@@ -102,7 +102,7 @@
         )}">
         <img
           src="/me.webp"
-          alt="Levi Zepeda - Frontend Developer"
+          alt="Levi Zepeda - Fullstack Developer"
           width="500"
           height="500"
           on:load={handleImageLoad}
