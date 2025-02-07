@@ -20,7 +20,26 @@
           'body',
         )($theme)} text-sm flex items-center divide-x {theme.getBorderClasses('default')($theme)}">
         <span class="pr-2">
-          Levi Zepeda. {t.builtWith}
+          Levi Zepeda. {t.builtWith}{" "}
+          <a
+            href="https://svelte.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-primary hover:text-primary-dark dark:text-primary-dark dark:hover:text-primary transition-colors {isHighContrast
+              ? 'font-medium'
+              : ''}">
+            Svelte
+          </a>
+          {" "}{t.andText}{" "}
+          <a
+            href="https://astro.build"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-primary hover:text-primary-dark dark:text-primary-dark dark:hover:text-primary transition-colors {isHighContrast
+              ? 'font-medium'
+              : ''}">
+            Astro
+          </a>
         </span>
         <a
           href="https://github.com/lbzepeda/lzepeda.dev"
