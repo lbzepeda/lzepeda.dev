@@ -18,15 +18,11 @@
     const element = document.getElementById(targetId);
 
     if (element) {
-      const headerOffset = 64;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
+      element.scrollIntoView({
         behavior: "smooth",
+        block: "start",
+        inline: "nearest",
       });
-
       closeMenu();
     }
   }
