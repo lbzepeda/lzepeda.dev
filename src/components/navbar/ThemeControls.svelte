@@ -42,7 +42,7 @@
       <div
         id="accessibility-menu"
         use:clickOutside={() => (isPopoverOpen = false)}
-        class="absolute mt-2 rounded-xl p-4 w-72 shadow-xl border transition-colors z-50
+        class="fixed md:absolute left-1/2 md:left-auto -translate-x-1/2 md:translate-x-0 top-16 md:top-auto md:right-0 md:mt-2 rounded-xl p-4 w-[90vw] max-w-[320px] md:w-72 shadow-xl border transition-colors z-50
         {$theme.contrast === 'high'
           ? 'bg-slate-50 dark:bg-slate-900 border-slate-400 dark:border-slate-500'
           : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}"
@@ -125,3 +125,10 @@
     {/if}
   </div>
 </div>
+
+<style>
+  :global(.theme-controls) {
+    position: relative;
+    z-index: 999;
+  }
+</style>
